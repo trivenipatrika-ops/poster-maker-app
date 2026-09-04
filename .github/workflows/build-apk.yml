@@ -12,7 +12,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 45
+    timeout-minutes: 90
 
     steps:
       - name: Code checkout karein
@@ -57,9 +57,13 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.36
 
-      - name: APK build karein
-        run: |
-          yes | buildozer android debug || buildozer android debug
+      - name: APK build karein (network gadbadi par 3 baar dobara koshish)
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_wait_seconds: 45
+          command: yes | buildozer android debug || buildozer android debug
 
       - name: APK ko artifact ke roop me save karein
         uses: actions/upload-artifact@v4
