@@ -30,6 +30,11 @@ jobs:
           ndk-version: r25b
           add-to-path: false
 
+      - name: Buildozer.spec ko asli SDK/NDK path batayein
+        run: |
+          echo "android.ndk_path = ${{ steps.setup-ndk.outputs.ndk-path }}" >> buildozer.spec
+          echo "android.sdk_path = /usr/local/lib/android/sdk" >> buildozer.spec
+
       - name: Buildozer cache karein
         uses: actions/cache@v4
         with:
@@ -52,12 +57,7 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.36
 
-      - name: APK build karein (pehle se installed SDK/NDK istemal karke)
-        env:
-          ANDROIDSDK: /usr/local/lib/android/sdk
-          ANDROIDNDK: ${{ steps.setup-ndk.outputs.ndk-path }}
-          ANDROIDAPI: "34"
-          ANDROIDMINAPI: "21"
+      - name: APK build karein
         run: |
           yes | buildozer android debug || buildozer android debug
 
