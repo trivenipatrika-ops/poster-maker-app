@@ -1,5 +1,4 @@
 kivy==2.3.0
 pillow==10.4.0
-kivmob==0.4.0
 pyjnius==1.6.1
 plyer==2.1.0
