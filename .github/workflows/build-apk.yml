@@ -15,7 +15,6 @@ jobs:
     timeout-minutes: 60
     container:
       image: kivy/buildozer:latest
-      options: --user root
 
     steps:
       - name: Code checkout karein
