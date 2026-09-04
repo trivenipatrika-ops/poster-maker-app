@@ -12,58 +12,27 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 90
+    timeout-minutes: 60
+    container:
+      image: kivy/buildozer:latest
+      options: --user root
 
     steps:
       - name: Code checkout karein
         uses: actions/checkout@v4
 
-      - name: Python setup karein
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-      - name: Android NDK install karein (bharosemand tarike se)
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r25b
-          add-to-path: false
-
-      - name: Buildozer.spec ko asli SDK/NDK path batayein
-        run: |
-          echo "android.ndk_path = ${{ steps.setup-ndk.outputs.ndk-path }}" >> buildozer.spec
-          echo "android.sdk_path = /usr/local/lib/android/sdk" >> buildozer.spec
-
       - name: Buildozer cache karein
         uses: actions/cache@v4
         with:
           path: |
-            ~/.buildozer
             .buildozer
-          key: buildozer-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-docker-${{ hashFiles('buildozer.spec') }}
           restore-keys: |
-            buildozer-
+            buildozer-docker-
 
-      - name: System dependencies install karein
+      - name: APK build karein
         run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip \
-            autoconf libtool pkg-config zlib1g-dev libncurses5-dev \
-            libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev build-essential
-
-      - name: Buildozer install karein
-        run: |
-          pip install --upgrade pip
-          pip install buildozer cython==0.29.36
-
-      - name: APK build karein (network gadbadi par 3 baar dobara koshish)
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 30
-          max_attempts: 3
-          retry_wait_seconds: 45
-          command: yes | buildozer android debug || buildozer android debug
+          buildozer android debug
 
       - name: APK ko artifact ke roop me save karein
         uses: actions/upload-artifact@v4
