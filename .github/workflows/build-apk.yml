@@ -12,7 +12,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 90
+    timeout-minutes: 120
     container:
       image: kivy/buildozer:latest
 
@@ -29,12 +29,12 @@ jobs:
           restore-keys: |
             buildozer-docker-
 
-      - name: APK build karein (network gadbadi par 3 baar dobara koshish)
+      - name: APK build karein (5 baar tak dobara koshish, lambe wait ke saath)
         uses: nick-fields/retry@v3
         with:
-          timeout_minutes: 30
-          max_attempts: 3
-          retry_wait_seconds: 60
+          timeout_minutes: 40
+          max_attempts: 5
+          retry_wait_seconds: 300
           command: buildozer android debug
 
       - name: APK ko artifact ke roop me save karein
