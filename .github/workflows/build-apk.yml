@@ -36,5 +36,5 @@ jobs:
       - name: APK ko artifact ke roop me save karein
         uses: actions/upload-artifact@v4
         with:
-          name: poster-maker-apk
+          name: poster-maker-pro-apk
           path: bin/*.apk
