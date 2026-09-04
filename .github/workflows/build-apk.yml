@@ -5,9 +5,15 @@ on:
     branches: [ "main" ]
   workflow_dispatch: {}
 
+concurrency:
+  group: android-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-22.04
+    timeout-minutes: 40
+
     steps:
       - name: Code checkout karein
         uses: actions/checkout@v4
